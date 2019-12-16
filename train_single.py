@@ -26,7 +26,7 @@ def build_files(raw_data_path, tokenized_data_path, full_tokenizer, num_pieces):
     for i in tqdm(range(num_pieces)):
         single_ids = full_tokenizer.convert_tokens_to_ids(
             full_tokenizer.tokenize(single[len_single // num_pieces * i: len_single // num_pieces * (i + 1)]))
-        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w', encoding="utf-8") as f:
+        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w') as f:
             for id in single_ids[:-1]:
                 f.write(str(id) + ' ')
             f.write(str(single_ids[-1]))
