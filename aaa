@@ -1,0 +1,5 @@
+%tensorflow_version 2.1.1
+!git clone -q https://github.com/qiuzongwang/GPT-2-Train
+%cd /content/GPT-2-Train
+
+!PYTHONPATH=$(pwd) python3 scripts/interactive_conditional_samples.py -model_config_fn configs/mega.json -model_ckpt models/mega/model.ckpt-100000 -eos_token 511 -min_len 200 -samples 10

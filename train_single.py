@@ -26,7 +26,7 @@ def build_files(raw_data_path, tokenized_data_path, full_tokenizer, num_pieces):
     for i in tqdm(range(num_pieces)):
         single_ids = full_tokenizer.convert_tokens_to_ids(
             full_tokenizer.tokenize(single[len_single // num_pieces * i: len_single // num_pieces * (i + 1)]))
-        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w') as f:
+        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w', encoding="utf-8") as f:
             for id in single_ids[:-1]:
                 f.write(str(id) + ' ')
             f.write(str(single_ids[-1]))
@@ -117,7 +117,7 @@ def main():
 
     optimizer = transformers.AdamW(model.parameters(), lr=lr, correct_bias=True)
     scheduler = transformers.WarmupLinearSchedule(optimizer, warmup_steps=warmup_steps,
-                                                          t_total=total_steps)
+                                                  t_total=total_steps)
     if fp16:
         try:
             from apex import amp
@@ -149,7 +149,7 @@ def main():
                 samples.append(tokens[start_point: start_point + n_ctx])
                 start_point += stride
             if start_point < len(tokens):
-                samples.append(tokens[len(tokens)-n_ctx:])
+                samples.append(tokens[len(tokens) - n_ctx:])
             random.shuffle(samples)
             for step in range(len(samples) // batch_size):
 

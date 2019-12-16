@@ -32,7 +32,7 @@ def build_files(data_path, tokenized_data_path, num_pieces, full_tokenizer, min_
             full_line.append(full_tokenizer.convert_tokens_to_ids('[MASK]'))  # 文章开头添加MASK表示文章开始
             full_line.extend(subline)
             full_line.append(full_tokenizer.convert_tokens_to_ids('[CLS]'))  # 文章之间添加CLS表示文章结束
-        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w') as f:
+        with open(tokenized_data_path + 'tokenized_train_{}.txt'.format(i), 'w',encoding='utf-8') as f:
             for id in full_line:
                 f.write(str(id) + ' ')
     print('finish')
