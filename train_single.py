@@ -59,6 +59,7 @@ def main():
     parser.add_argument('--output_dir', default='model/', type=str, required=False, help='模型输出路径')
     parser.add_argument('--pretrained_model', default='', type=str, required=False, help='模型训练起点路径')
     parser.add_argument('--segment', action='store_true', help='中文以词为单位')
+    parser.add_argument('--google_driver_save', action='store_true', help='是否保存模型到谷歌云盘')
 
     args = parser.parse_args()
     print('args:\n' + args.__repr__())
@@ -221,6 +222,34 @@ def main():
     model_to_save.save_pretrained(output_dir + 'final_model')
     # torch.save(scheduler.state_dict(), output_dir + 'final_model/scheduler.pt')
     # torch.save(optimizer.state_dict(), output_dir + 'final_model/optimizer.pt')
+
+    if args.google_driver_save:
+        # Import PyDrive and associated libraries.
+        # This only needs to be done once in a notebook.
+        from pydrive.auth import GoogleAuth
+        from pydrive.drive import GoogleDrive
+        from google.colab import auth
+        from oauth2client.client import GoogleCredentials
+
+        # Authenticate and create the PyDrive client.
+        # This only needs to be done once in a notebook.
+        auth.authenticate_user()
+        gauth = GoogleAuth()
+        gauth.credentials = GoogleCredentials.get_application_default()
+        drive = GoogleDrive(gauth)
+
+        # Create & upload a text file.
+        uploaded = drive.CreateFile({"title": "config.json"})
+        # Read file and set it as a content of this instance.
+        uploaded.SetContentFile('/content/GPT-2-Train/model/final_model/config.json')
+        uploaded.Upload()  # Upload the file.
+        print('Uploaded file with ID {}'.format(uploaded.get('id')))
+
+        uploaded = drive.CreateFile({"title": "pytorch_model.bin"})
+        # Read file and set it as a content of this instance.
+        uploaded.SetContentFile('/content/GPT-2-Train/model/final_model/pytorch_model.bin')
+        uploaded.Upload()  # Upload the file.
+        print('Uploaded file with ID {}'.format(uploaded.get('id')))
 
 
 if __name__ == '__main__':
